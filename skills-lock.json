@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "skills": {
+    "better-icons": {
+      "source": "better-auth/better-icons",
+      "sourceType": "github",
+      "computedHash": "2634267441f60cf435baf05cc0fc49e8ea9eac681a47d4ecb7080beffd0ec2fd"
+    },
+    "career-transitions": {
+      "source": "refoundai/lenny-skills",
+      "sourceType": "github",
+      "computedHash": "f302d082c0f23c9af4e9f0b6b86d7ee037104308da8b6120e3bb8181fa096000"
+    },
+    "express-backend-starter": {
+      "source": "codewithhashim/express-backend-starter-skill",
+      "sourceType": "github",
+      "computedHash": "496316d566006c8f36034ac0eeb6af95e461650da0aea5b6bc5f2743bc815d51"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "516bd2154eb843a8240e43d5b285229129853114ad7075a5e141e1c08e408c84"
+    },
+    "react-expert": {
+      "source": "reactjs/react.dev",
+      "sourceType": "github",
+      "computedHash": "e4f38b4f38c6ff4124c0b776d3ff352097bd061ccef5e583bad44a543879c30b"
+    }
+  }
+}

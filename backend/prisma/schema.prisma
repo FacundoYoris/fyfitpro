@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  role      String    @default("user")
+  firstName String
+  lastName  String
+  phone     String?
+  dni       String?   @unique
+  avatar    String?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  userPlans    UserPlan[]
+  userRoutines UserRoutine[]
+  payments     Payment[]
+}
+
+model Plan {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  durationDays Int
+  daysPerWeek Int?
+  benefits    String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  userPlans UserPlan[]
+}
+
+model UserPlan {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  planId     Int
+  startDate  DateTime
+  endDate    DateTime?
+  assignedBy Int?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  amount         Float
+  paymentDate    DateTime
+  paymentMethod  String?
+  receipt        String?
+  month          Int
+  year           Int
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Exercise {
+  id            Int       @id @default(autoincrement())
+  name          String
+  muscleGroup   String?
+  description   String?
+  defaultSets   Int       @default(3)
+  defaultReps   Int       @default(10)
+  repScheme     String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  routineExercises RoutineExercise[]
+}
+
+model MuscleGroup {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Routine {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  duration    Int?      @default(60)
+  daysCount   Int?      @default(3)
+  difficulty  Int       @default(3)
+  isTemplate  Boolean   @default(false)
+  userId      Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  routineDays  RoutineDay[]
+  userRoutines UserRoutine[]
+}
+
+model RoutineDay {
+  id        Int     @id @default(autoincrement())
+  routineId Int
+  dayNumber Int
+  name      String
+  orderIndex Int @default(0)
+
+  routine        Routine           @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  routineExercises RoutineExercise[]
+}
+
+model RoutineExercise {
+  id           Int    @id @default(autoincrement())
+  routineDayId Int
+  exerciseId   Int
+  orderIndex   Int
+  sets         Int
+  reps         Int
+  repScheme    String?
+  observations String?
+
+  routineDay RoutineDay @relation(fields: [routineDayId], references: [id], onDelete: Cascade)
+  exercise   Exercise  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+}
+
+model UserRoutine {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  routineId   Int
+  assignedAt  DateTime @default(now())
+  assignedBy  Int?
+  isActive    Boolean  @default(true)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  routine Routine @relation(fields: [routineId], references: [id], onDelete: Cascade)
+}

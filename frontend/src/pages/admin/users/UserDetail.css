@@ -1,0 +1,355 @@
+.user-detail-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background: radial-gradient(circle at top, rgba(59, 130, 246, 0.2), transparent 45%),
+    linear-gradient(135deg, #030712, #0f172a 60%, #030712);
+  color: white;
+  font-family: 'Outfit', sans-serif;
+}
+
+.user-panel {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .user-detail-page {
+    padding: 1.5rem 1rem 3rem;
+  }
+}
+
+.user-hero {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2.25rem;
+}
+
+.hero-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-btn {
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255,255,255,0.75);
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+}
+
+.hero-main {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hero-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.hero-kicker {
+  letter-spacing: 0.4em;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.55);
+  margin: 0;
+}
+
+.hero-main h1 {
+  margin: 0.2rem 0 0.2rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  letter-spacing: 0.08em;
+}
+
+.hero-main span {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.9rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.status-pill {
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+}
+
+.status-pill.active {
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #6ee7b7;
+}
+
+.status-pill.inactive {
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #fecaca;
+}
+
+
+.user-sections-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.user-panel {
+  border-radius: 20px;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.92), rgba(5, 9, 20, 0.95));
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #f8fafc;
+}
+
+.panel-header p {
+  margin: 0.2rem 0 0;
+  color: rgba(226,232,240,0.75);
+}
+
+.member-since {
+  text-align: right;
+}
+
+.member-since .hero-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+
+.plans-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.plan-card {
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 15px 35px -20px rgba(0,0,0,0.5);
+}
+
+.plan-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.plan-card h4 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.plan-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.plan-meta small {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+}
+
+.plan-meta strong {
+  display: block;
+  margin-top: 0.2rem;
+}
+
+.panel-footer {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: center;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+}
+
+.detail-value {
+  font-weight: 600;
+}
+
+.table.premium {
+  width: 100%;
+  border-spacing: 0;
+}
+
+.table.premium thead th {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.55);
+  padding: 0.75rem 0.5rem;
+}
+
+.table.premium tbody td {
+  padding: 0.75rem 0.5rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.panel-empty {
+  text-align: center;
+  padding: 1.5rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.modal .form-label {
+  color: rgba(15, 23, 42, 0.8);
+}
+
+.modal .form-input,
+.modal .form-select {
+  margin-top: 0.4rem;
+}
+.routine-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  padding-left: 0.75rem;
+}
+
+.routine-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.routine-marker {
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.routine-marker span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border: 2px solid rgba(59, 130, 246, 0.6);
+}
+
+.routine-item:not(:last-child) .routine-marker::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: 2px;
+  height: calc(100% + 12px);
+  background: rgba(59, 130, 246, 0.3);
+  transform: translateX(-50%);
+}
+
+.routine-body {
+  flex: 1;
+  padding: 0.9rem 1.1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.02);
+}
+
+.routine-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.routine-header h4 {
+  margin: 0;
+}
+
+.routine-body p {
+  margin: 0.3rem 0 0;
+  color: rgba(255,255,255,0.65);
+}
+
+.payments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.02);
+}
+
+.payment-row h5 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.payment-row p {
+  margin: 0.2rem 0 0;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.85rem;
+}
+
+.period-chip {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+}

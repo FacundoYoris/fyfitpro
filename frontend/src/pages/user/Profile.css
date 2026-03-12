@@ -1,0 +1,234 @@
+.profile-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background: radial-gradient(circle at top, rgba(59, 130, 246, 0.2), transparent 55%),
+    linear-gradient(135deg, #020617, #0f172a 60%, #020617);
+  color: white;
+  font-family: 'Outfit', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 1.5rem 1rem 3rem;
+  }
+}
+
+.profile-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 1.8rem;
+  margin-bottom: 2rem;
+}
+
+.hero-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #38bdf8, #1d4ed8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.hero-kicker {
+  letter-spacing: 0.4em;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+  margin: 0;
+}
+
+.profile-hero h1 {
+  margin: 0.2rem 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  letter-spacing: 0.08em;
+}
+
+.hero-meta {
+  margin: 0.1rem 0;
+  color: rgba(255,255,255,0.65);
+}
+
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.hero-actions small {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.5);
+}
+
+.hero-actions strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.profile-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-panel {
+  border-radius: 20px;
+  padding: 1.5rem;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile-panel header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.panel-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-icon.primary {
+  background: rgba(16, 185, 129, 0.2);
+}
+
+.panel-icon.warning {
+  background: rgba(234, 179, 8, 0.2);
+}
+
+.panel-icon.neutral {
+  background: rgba(99, 102, 241, 0.25);
+}
+
+.profile-panel h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.profile-panel p {
+  margin: 0.2rem 0 0;
+  color: rgba(255,255,255,0.65);
+}
+
+.plan-details,
+.payment-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.plan-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.plan-row span:first-child {
+  color: rgba(255,255,255,0.55);
+}
+
+.payment-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.payment-status.paid {
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+}
+
+.payment-status.pending {
+  background: rgba(234, 179, 8, 0.2);
+  color: #fcd34d;
+}
+
+.payment-amount {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.routines-panel {
+  margin-top: 1rem;
+}
+
+.routines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.routine-card {
+  border-radius: 16px;
+  padding: 1rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.02);
+}
+
+.routine-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.routine-duration {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  background: rgba(99, 102, 241, 0.2);
+  font-size: 0.75rem;
+}
+
+.routine-description {
+  margin: 0.3rem 0 0.8rem;
+  color: rgba(255,255,255,0.65);
+}
+
+.routine-meta {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.8rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 0.6rem;
+}
+
+.no-data {
+  color: rgba(255,255,255,0.6);
+}
+
+.empty-routines {
+  text-align: center;
+  padding: 2rem;
+  border: 1px dashed rgba(255,255,255,0.2);
+  border-radius: 16px;
+}
+
+.empty-hint {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.85rem;
+}

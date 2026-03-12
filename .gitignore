@@ -1,0 +1,42 @@
+# Dependency directories
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+build/
+**/dist/
+**/build/
+frontend/.vite/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Logs and reports
+*.log
+logs/
+coverage/
+
+# Environment and secrets
+.env
+.env.*
+*.local
+
+# Prisma / SQLite artifacts
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+generated/prisma/
+
+# IDE and tooling
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc caches
+.parcel-cache
+.turbo
+tmp/
