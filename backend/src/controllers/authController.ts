@@ -5,16 +5,16 @@ import { generateToken } from '../config/jwt';
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    if (!email || !password) {
+    if (!username || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Email y contraseña son requeridos',
+        message: 'Usuario y contraseña son requeridos',
       });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { username } });
 
     if (!user) {
       return res.status(401).json({
@@ -41,7 +41,7 @@ export const login = async (req: Request, res: Response) => {
 
     const token = generateToken({
       id: user.id,
-      email: user.email,
+      username: user.username,
       role: user.role,
     });
 
@@ -51,6 +51,7 @@ export const login = async (req: Request, res: Response) => {
         token,
         user: {
           id: user.id,
+          username: user.username,
           email: user.email,
           role: user.role,
           firstName: user.firstName,
@@ -91,6 +92,21 @@ export const getMe = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: 'Error al obtener usuario',
+    });
+  }
+};
+
+export const validateToken = async (_req: Request, res: Response) => {
+  try {
+    res.json({
+      success: true,
+      data: { valid: true },
+    });
+  } catch (error) {
+    console.error('Error en validateToken:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al validar token',
     });
   }
 };

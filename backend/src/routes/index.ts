@@ -7,6 +7,7 @@ import exerciseRoutes from './exerciseRoutes';
 import routineRoutes from './routineRoutes';
 import dashboardRoutes from './dashboardRoutes';
 import muscleGroupRoutes from './muscleGroupRoutes';
+import memberRoutes from './memberRoutes';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/exercises', exerciseRoutes);
 router.use('/routines', routineRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/muscle-groups', muscleGroupRoutes);
+router.use('/members', memberRoutes);
 
 export default router;

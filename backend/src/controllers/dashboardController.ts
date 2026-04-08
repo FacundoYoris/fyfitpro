@@ -101,6 +101,32 @@ export const getUsersOverview = async (req: Request, res: Response) => {
           },
         });
 
+        const activities = await prisma.userActivity.findMany({
+          where: { userId: user.id },
+          orderBy: { date: 'asc' },
+        });
+
+        const checkWasActiveInMonth = (month: number, year: number) => {
+          const monthStart = new Date(year, month - 1, 1);
+          const monthEnd = new Date(year, month, 0);
+
+          if (user.createdAt > monthEnd) return false;
+
+          let wasActive = user.isActive;
+
+          for (const activity of activities) {
+            if (activity.date > monthEnd) break;
+            if (activity.date <= monthEnd) {
+              wasActive = activity.type === 'activation';
+            }
+          }
+
+          return wasActive;
+        };
+
+        const wasActiveInMonth = checkWasActiveInMonth(currentMonth, currentYear);
+        const shouldShowPayment = wasActiveInMonth;
+
         return {
           id: user.id,
           firstName: user.firstName,
@@ -122,7 +148,7 @@ export const getUsersOverview = async (req: Request, res: Response) => {
             assignedAt: userRoutine.assignedAt,
           } : null,
           paymentStatus: {
-            isPaid: !!payment,
+            isPaid: shouldShowPayment ? !!payment : true,
             paymentId: payment?.id ?? null,
             month: currentMonth,
             year: currentYear,

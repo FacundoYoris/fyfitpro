@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import userService from '../../../services/userService';
 import { User } from '../../../types';
 import './Users.css';
@@ -54,6 +55,7 @@ const statusFilters = [
 ];
 
 type CreateUserForm = {
+  username: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -64,6 +66,7 @@ type CreateUserForm = {
 };
 
 const initialCreateForm: CreateUserForm = {
+  username: '',
   firstName: '',
   lastName: '',
   email: '',
@@ -88,6 +91,7 @@ export const Users = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [creatingUser, setCreatingUser] = useState(false);
   const [createForm, setCreateForm] = useState<CreateUserForm>(initialCreateForm);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     loadUsers();
@@ -166,7 +170,7 @@ export const Users = () => {
 
   const handleCreateUser = async (event: FormEvent) => {
     event.preventDefault();
-    if (!createForm.firstName.trim() || !createForm.lastName.trim() || !createForm.email.trim() || !createForm.password.trim()) {
+    if (!createForm.username.trim() || !createForm.firstName.trim() || !createForm.lastName.trim() || !createForm.password.trim()) {
       showToast('Completá los campos obligatorios', 'error');
       return;
     }
@@ -174,9 +178,10 @@ export const Users = () => {
     setCreatingUser(true);
     try {
       const payload = {
+        username: createForm.username.trim(),
         firstName: createForm.firstName.trim(),
         lastName: createForm.lastName.trim(),
-        email: createForm.email.trim(),
+        email: createForm.email.trim() || undefined,
         password: createForm.password.trim(),
         phone: createForm.phone.trim() || undefined,
         dni: createForm.dni.trim() || undefined,
@@ -388,6 +393,16 @@ export const Users = () => {
             <form className="create-user-form" onSubmit={handleCreateUser}>
               <div className="form-grid">
                 <label className="form-field">
+                  <span>Usuario *</span>
+                  <input
+                    type="text"
+                    value={createForm.username}
+                    onChange={(e) => setCreateForm({ ...createForm, username: e.target.value })}
+                    placeholder="juanperez"
+                    required
+                  />
+                </label>
+                <label className="form-field">
                   <span>Nombre *</span>
                   <input
                     type="text"
@@ -408,24 +423,32 @@ export const Users = () => {
                   />
                 </label>
                 <label className="form-field">
-                  <span>Email *</span>
+                  <span>Email</span>
                   <input
                     type="email"
                     value={createForm.email}
                     onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
                     placeholder="usuario@fygym.com"
-                    required
                   />
                 </label>
                 <label className="form-field">
                   <span>Contraseña *</span>
-                  <input
-                    type="password"
-                    value={createForm.password}
-                    onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
-                    placeholder="••••••••"
-                    required
-                  />
+                  <div className="password-input-wrapper">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={createForm.password}
+                      onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
+                      placeholder="••••••••"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </label>
                 <label className="form-field">
                   <span>Teléfono</span>

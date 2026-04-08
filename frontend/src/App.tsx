@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Layout from './components/layout/Layout';
 import ProtectedRoute from './components/layout/ProtectedRoute';
+import AdminRoute from './components/layout/AdminRoute';
 import Login from './pages/auth/Login';
 import Dashboard from './pages/admin/dashboard/Dashboard';
 import Users from './pages/admin/users/Users';
@@ -22,25 +23,28 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           
-          <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<ProtectedRoute />}>
             <Route element={<Layout />}>
+              <Route index element={<Navigate to="/profile" replace />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/admin/dashboard" element={<Dashboard />} />
-              <Route path="/admin/users" element={<Users />} />
-              <Route path="/admin/users/new" element={<UserForm />} />
-              <Route path="/admin/users/:id" element={<UserDetail />} />
-              <Route path="/admin/plans" element={<Plans />} />
-              <Route path="/admin/plans/new" element={<PlanForm />} />
-              <Route path="/admin/exercises" element={<Exercises />} />
-              <Route path="/admin/routines" element={<Routines />} />
-              <Route path="/admin/routines/new" element={<RoutineForm />} />
-              <Route path="/admin/routines/:id" element={<RoutineForm />} />
-              <Route path="/admin/payments" element={<Payments />} />
+              
+              <Route element={<AdminRoute />}>
+                <Route path="/admin/dashboard" element={<Dashboard />} />
+                <Route path="/admin/users" element={<Users />} />
+                <Route path="/admin/users/new" element={<UserForm />} />
+                <Route path="/admin/users/:id" element={<UserDetail />} />
+                <Route path="/admin/plans" element={<Plans />} />
+                <Route path="/admin/plans/new" element={<PlanForm />} />
+                <Route path="/admin/exercises" element={<Exercises />} />
+                <Route path="/admin/routines" element={<Routines />} />
+                <Route path="/admin/routines/new" element={<RoutineForm />} />
+                <Route path="/admin/routines/:id" element={<RoutineForm />} />
+                <Route path="/admin/payments" element={<Payments />} />
+              </Route>
             </Route>
           </Route>
 
-          <Route path="/" element={<Navigate to="/profile" replace />} />
-          <Route path="*" element={<Navigate to="/profile" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

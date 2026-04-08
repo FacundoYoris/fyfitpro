@@ -105,8 +105,8 @@ export const Payments = () => {
   };
 
   const filteredUsers = users.filter((user) => isRelevantForPeriod(user.createdAt));
-  const pendingPayments = filteredUsers.filter(u => !u.paymentStatus.isPaid);
-  const paidPayments = filteredUsers.filter(u => u.paymentStatus.isPaid);
+  const pendingPayments = filteredUsers.filter(u => !u.paymentStatus.isPaid && u.isActive);
+  const paidPayments = filteredUsers.filter(u => u.paymentStatus.isPaid && u.isActive);
   const displayedUsers = activeTab === 'pending' ? pendingPayments : paidPayments;
 
   if (loading) {

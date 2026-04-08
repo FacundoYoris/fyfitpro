@@ -304,6 +304,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.btn-ghost-user:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .btn-ghost-user.success {
@@ -311,9 +317,19 @@
   color: #6ee7b7;
 }
 
+.btn-ghost-user.success:hover {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.6);
+}
+
 .btn-ghost-user.danger {
   border-color: rgba(248, 113, 113, 0.4);
   color: #fecaca;
+}
+
+.btn-ghost-user.danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.6);
 }
 
 .users-empty {
@@ -434,6 +450,35 @@
   outline: none;
   border-color: rgba(59, 130, 246, 0.7);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 2.5rem !important;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: rgba(226, 232, 240, 0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+  color: rgba(226, 232, 240, 0.9);
 }
 
 .create-user-footer {

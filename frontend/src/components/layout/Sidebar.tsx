@@ -1,5 +1,16 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, CreditCard, Wallet2, ClipboardList, Dumbbell as DumbbellIcon, UserCircle2 } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Users,
+  CreditCard,
+  Wallet2,
+  ClipboardList,
+  Dumbbell as DumbbellIcon,
+  UserCircle2,
+  LogOut,
+  PanelLeftClose,
+  PanelLeftOpen,
+} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Sidebar.css';
@@ -38,17 +49,40 @@ const userMenuItems: { section: string; items: MenuItem[] }[] = [
   },
 ];
 
-export const Sidebar = () => {
+interface SidebarProps {
+  collapsed: boolean;
+  mobileOpen: boolean;
+  onToggleCollapsed: () => void;
+  onCloseMobile: () => void;
+}
+
+export const Sidebar = ({
+  collapsed,
+  mobileOpen,
+  onToggleCollapsed,
+  onCloseMobile,
+}: SidebarProps) => {
   const { user, logout } = useAuth();
   const isAdmin = user?.role === 'admin';
   const menuItems = isAdmin ? adminMenuItems : userMenuItems;
 
   return (
-    <aside className="sidebar">
+    <>
+      {mobileOpen ? <div className="sidebar-backdrop" onClick={onCloseMobile} /> : null}
+
+      <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'open' : ''}`}>
       <div className="sidebar-header">
         <h1 className="sidebar-logo">
           <img src="/logo-fy-fitpro.png" alt="FY FitPro" />
         </h1>
+        <button
+          type="button"
+          className="sidebar-collapse-btn"
+          onClick={onToggleCollapsed}
+          aria-label={collapsed ? 'Expandir menú' : 'Comprimir menú'}
+        >
+          {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
+        </button>
       </div>
 
       <nav className="sidebar-nav">
@@ -59,6 +93,7 @@ export const Sidebar = () => {
               <NavLink
                 key={item.path}
                 to={item.path}
+                onClick={onCloseMobile}
                 className={({ isActive }) =>
                   `sidebar-link ${isActive ? 'active' : ''}`
                 }
@@ -66,7 +101,7 @@ export const Sidebar = () => {
                 <span className="sidebar-icon">
                   <item.icon size={18} />
                 </span>
-                <span>{item.label}</span>
+                <span className="sidebar-label">{item.label}</span>
               </NavLink>
             ))}
           </div>
@@ -83,11 +118,19 @@ export const Sidebar = () => {
             <span className="sidebar-user-role">{user?.role === 'admin' ? 'Administrador' : 'Usuario'}</span>
           </div>
         </div>
-        <button onClick={logout} className="sidebar-logout">
-          Cerrar sesión
+        <button
+          onClick={() => {
+            onCloseMobile();
+            logout();
+          }}
+          className="sidebar-logout"
+        >
+          <LogOut size={16} />
+          <span className="sidebar-logout-label">Cerrar sesión</span>
         </button>
       </div>
     </aside>
+    </>
   );
 };
 

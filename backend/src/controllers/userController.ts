@@ -118,14 +118,31 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { email, password, firstName, lastName, phone, dni, role = 'user' } = req.body;
+    const { username, email, password, firstName, lastName, phone, dni, role = 'user' } = req.body;
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (!username) {
+      return res.status(400).json({
+        success: false,
+        message: 'El nombre de usuario es requerido',
+      });
+    }
+
+    const existingUser = await prisma.user.findUnique({ where: { username } });
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'El email ya está registrado',
+        message: 'El nombre de usuario ya está registrado',
       });
+    }
+
+    if (email) {
+      const existingEmail = await prisma.user.findUnique({ where: { email } });
+      if (existingEmail) {
+        return res.status(400).json({
+          success: false,
+          message: 'El email ya está registrado',
+        });
+      }
     }
 
     if (dni) {
@@ -142,6 +159,7 @@ export const createUser = async (req: Request, res: Response) => {
 
     const user = await prisma.user.create({
       data: {
+        username,
         email,
         password: hashedPassword,
         firstName,
@@ -152,6 +170,7 @@ export const createUser = async (req: Request, res: Response) => {
       },
       select: {
         id: true,
+        username: true,
         email: true,
         firstName: true,
         lastName: true,
@@ -261,10 +280,19 @@ export const toggleUserStatus = async (req: Request, res: Response) => {
       });
     }
 
+    const newStatus = !user.isActive;
+
     const updatedUser = await prisma.user.update({
       where: { id: Number(id) },
-      data: { isActive: !user.isActive },
+      data: { isActive: newStatus },
       select: { isActive: true },
+    });
+
+    await prisma.userActivity.create({
+      data: {
+        userId: Number(id),
+        type: newStatus ? 'activation' : 'deactivation',
+      },
     });
 
     res.json({

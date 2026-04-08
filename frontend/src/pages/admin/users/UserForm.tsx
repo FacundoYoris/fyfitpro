@@ -7,6 +7,7 @@ export const UserForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
     password: '',
     firstName: '',
@@ -70,13 +71,23 @@ export const UserForm = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Email *</label>
+            <label className="form-label">Usuario *</label>
+            <input
+              type="text"
+              className="form-input"
+              value={formData.username}
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Email</label>
             <input
               type="email"
               className="form-input"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
             />
           </div>
 

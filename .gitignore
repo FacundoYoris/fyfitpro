@@ -38,6 +38,7 @@ generated/prisma/
 # OS files
 .DS_Store
 Thumbs.db
+nul
 
 # Misc caches
 .parcel-cache

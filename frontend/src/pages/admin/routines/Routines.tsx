@@ -152,31 +152,31 @@ export const Routines = () => {
             return (
               <div key={routine.id} className="routine-card">
               <div className="routine-card-header">
-                <div className="routine-card-title">
-                  <h3 className="routine-name">{routine.name}</h3>
-                  <div className="routine-difficulty">
-                    <div className="routine-difficulty-stars">
-                      {Array.from({ length: 5 }).map((_, starIndex) => (
-                        <StarIcon key={starIndex} filled={starIndex < difficultyLevel} />
-                      ))}
+                  <div className="routine-card-header-top">
+                    <h3 className="routine-name">{routine.name}</h3>
+                    <div className="routine-difficulty">
+                      <div className="routine-difficulty-stars">
+                        {Array.from({ length: 5 }).map((_, starIndex) => (
+                          <StarIcon key={starIndex} filled={starIndex < difficultyLevel} />
+                        ))}
+                      </div>
+                      <span className="routine-difficulty-label">Nivel {difficultyLevel}</span>
                     </div>
-                    <span className="routine-difficulty-label">Nivel {difficultyLevel}</span>
+                  </div>
+                  <div className="routine-card-actions">
+                    <button className="edit-btn" onClick={() => navigate(`/admin/routines/${routine.id}`)} title="Editar">
+                      <EditIcon />
+                    </button>
+                    <button className="view-btn" onClick={() => setSelectedRoutine(routine)} title="Ver">
+                      <EyeIcon />
+                    </button>
+                    <button className="delete-btn" onClick={() => handleDeleteRoutine(routine.id)} title="Eliminar">
+                      <TrashIcon />
+                    </button>
                   </div>
                 </div>
-                <div className="routine-card-actions">
-                  <button className="edit-btn" onClick={() => navigate(`/admin/routines/${routine.id}`)} title="Editar">
-                    <EditIcon />
-                  </button>
-                  <button className="view-btn" onClick={() => setSelectedRoutine(routine)} title="Ver">
-                    <EyeIcon />
-                  </button>
-                  <button className="delete-btn" onClick={() => handleDeleteRoutine(routine.id)} title="Eliminar">
-                    <TrashIcon />
-                  </button>
-                </div>
-              </div>
-              
-              <div className="routine-card-body">
+               
+               <div className="routine-card-body">
                 <p className="routine-description">
                   {routine.description ?? ''}
                 </p>

@@ -11,7 +11,9 @@
 }
 
 @media (max-width: 768px) {
-  .routines-page {
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+.routines-page {
     margin: -1rem;
     width: calc(100% + 2rem);
   }
@@ -55,21 +57,9 @@
 
 .routines-page .routines-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
-  align-items: stretch;
-}
-
-@media (max-width: 1024px) {
-  .routines-page .routines-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .routines-page .routines-grid {
-    grid-template-columns: 1fr;
-  }
+  align-items: start;
 }
 
 .routines-page .routine-card {
@@ -83,8 +73,9 @@
   width: 100%;
   min-width: 0;
   height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .routine-card:hover {
@@ -101,63 +92,47 @@
 .routine-card:nth-child(6) { animation-delay: 0.35s; }
 
 .routine-card-header {
-  padding: 1.5rem 1.75rem;
+  padding: 1rem 1.5rem;
   background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%) !important;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  min-height: 70px;
 }
 
-.routine-card-title {
-  flex: 1;
+.routine-card-header-top {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .routine-name {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   color: #ffffff;
   letter-spacing: 0.08em;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   text-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
   position: relative;
-  display: inline-block;
-  transition: all 0.3s ease;
-  word-break: break-word;
-  flex: 1;
-}
-
-.routine-name::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 40px;
-  height: 3px;
-  background: linear-gradient(90deg, #10b981, transparent);
-  border-radius: 2px;
-  transition: width 0.3s ease;
-}
-
-.routine-card:hover .routine-name {
-  color: #10b981;
-  text-shadow: 0 2px 15px rgba(16, 185, 129, 0.5);
-}
-
-.routine-card:hover .routine-name::after {
-  width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .routine-difficulty {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.25rem;
-  min-width: 110px;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.routine-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .routine-difficulty-stars {
@@ -182,17 +157,6 @@
 .routine-star.filled {
   color: #fcd34d;
   filter: drop-shadow(0 2px 6px rgba(252, 211, 77, 0.4));
-}
-
-.routine-card-actions {
-  display: flex;
-  gap: 0.5rem;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.routine-card:hover .routine-card-actions {
-  opacity: 1;
 }
 
 .routine-card-actions button {
@@ -230,10 +194,12 @@
 .routine-card-body {
   padding: 1.5rem 1.75rem 1rem;
   background: transparent;
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  box-sizing: border-box;
+  min-height: 0;
+  overflow: auto;
 }
 
 .routines-page .routine-description {
@@ -242,7 +208,9 @@
   line-height: 1.6;
   margin-bottom: 1.25rem;
   word-break: break-word;
-  min-height: 0.6rem;
+  min-height: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .routine-stats {
@@ -322,6 +290,9 @@
   display: flex;
   gap: 0.75rem;
   background: transparent;
+  justify-content: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .btn-view {
@@ -538,6 +509,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .btn-view-full:hover {

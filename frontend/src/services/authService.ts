@@ -33,9 +33,9 @@ interface UserProfile {
 }
 
 export const authService = {
-  login: async (email: string, password: string) => {
+  login: async (username: string, password: string) => {
     const response = await api.post<ApiResponse<LoginResponse>>('/auth/login', {
-      email,
+      username,
       password,
     });
     if (response.data.success && response.data.data) {
@@ -61,6 +61,11 @@ export const authService = {
 
   getProfile: async () => {
     const response = await api.get<ApiResponse<UserProfile>>('/auth/profile');
+    return response.data;
+  },
+
+  validateToken: async () => {
+    const response = await api.get<ApiResponse<{ valid: boolean }>>('/auth/validate');
     return response.data;
   },
 };

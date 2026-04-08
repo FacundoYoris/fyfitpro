@@ -146,6 +146,12 @@
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
+.muscle-group-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .muscle-group-count {
   font-size: 0.85rem;
   color: rgba(255,255,255,0.9);
@@ -153,6 +159,8 @@
   background: rgba(16, 185, 129, 0.3);
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
+  display: inline-block;
+  max-width: max-content;
 }
 
 .muscle-group-arrow {

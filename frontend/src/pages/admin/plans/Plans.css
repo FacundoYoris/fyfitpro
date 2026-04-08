@@ -65,8 +65,21 @@
 
 .plans-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  justify-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .plans-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .plan-card.premium {
@@ -81,6 +94,7 @@
   overflow: hidden;
   animation: floatCard 6s ease-in-out infinite;
   transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  max-width: 500px;
 }
 
 .plan-card.premium::after {

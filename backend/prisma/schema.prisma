@@ -9,7 +9,8 @@ datasource db {
 
 model User {
   id        Int       @id @default(autoincrement())
-  email     String    @unique
+  email     String?   @unique
+  username  String    @unique
   password  String
   role      String    @default("user")
   firstName String
@@ -21,9 +22,11 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  userPlans    UserPlan[]
-  userRoutines UserRoutine[]
-  payments     Payment[]
+  userPlans      UserPlan[]
+  userRoutines  UserRoutine[]
+  payments      Payment[]
+  activities    UserActivity[]
+  workoutSessions WorkoutSession[]
 }
 
 model Plan {
@@ -82,6 +85,7 @@ model Exercise {
   updatedAt     DateTime  @updatedAt
 
   routineExercises RoutineExercise[]
+  exerciseLogs     ExerciseLog[]
 }
 
 model MuscleGroup {
@@ -104,6 +108,7 @@ model Routine {
 
   routineDays  RoutineDay[]
   userRoutines UserRoutine[]
+  workoutSessions WorkoutSession[]
 }
 
 model RoutineDay {
@@ -115,6 +120,7 @@ model RoutineDay {
 
   routine        Routine           @relation(fields: [routineId], references: [id], onDelete: Cascade)
   routineExercises RoutineExercise[]
+  workoutSessions WorkoutSession[]
 }
 
 model RoutineExercise {
@@ -141,4 +147,46 @@ model UserRoutine {
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   routine Routine @relation(fields: [routineId], references: [id], onDelete: Cascade)
+}
+
+model UserActivity {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  type     String   // 'activation' or 'deactivation'
+  date     DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model WorkoutSession {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  routineId    Int
+  routineDayId Int
+  sessionDate  DateTime
+  status       String   @default("pending") // 'pending', 'completed', 'skipped'
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  routine    Routine       @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  routineDay RoutineDay    @relation(fields: [routineDayId], references: [id], onDelete: Cascade)
+  exerciseLogs ExerciseLog[]
+}
+
+model ExerciseLog {
+  id           Int      @id @default(autoincrement())
+  sessionId    Int
+  exerciseId   Int
+  setNumber    Int
+  weight       Float?
+  reps         Int?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  session  WorkoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercise Exercise      @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 }

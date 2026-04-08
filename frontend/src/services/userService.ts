@@ -9,9 +9,10 @@ interface UsersResponse {
 }
 
 interface CreateUserPayload {
+  username: string;
   firstName: string;
   lastName: string;
-  email: string;
+  email?: string;
   password: string;
   phone?: string;
   dni?: string;
