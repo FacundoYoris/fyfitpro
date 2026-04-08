@@ -25,6 +25,9 @@ coverage/
 # Prisma / SQLite artifacts
 backend/prisma/dev.db
 backend/prisma/dev.db-journal
+backend/dev.db
+*.db-wal
+*.db-shm
 generated/prisma/
 
 # IDE and tooling
