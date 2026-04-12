@@ -1,232 +1,148 @@
-# FY FitPro - AGENTS.md
+# AGENTS.md - FY FitPro
 
-## Project Overview
+Guidance for agentic coding tools operating in this repository.
+Prioritize existing code conventions over generic best practices.
 
-FY FitPro is a gym management web application with two main profiles: admin and gym user. The system manages users, membership plans, payments, exercises, and workout routines.
+## Stack and Layout
+- `backend/`: Express + TypeScript + Prisma + Jest/Supertest.
+- `frontend/`: React 18 + Vite + TypeScript + Playwright.
+- Active DB in code: SQLite (`backend/prisma/schema.prisma`).
+- API prefix: `/api`; backend dev port `3001`, frontend dev port `3000`.
 
-### Tech Stack
-- **Frontend**: React 18 + Vite + TypeScript
-- **Backend**: Express + TypeScript
-- **ORM**: Prisma 5
-- **Database**: SQLite (dev.db)
+Key folders:
+- `backend/src/controllers`, `backend/src/routes`, `backend/src/middleware`, `backend/src/config`, `backend/src/__tests__`
+- `frontend/src/pages`, `frontend/src/components`, `frontend/src/services`, `frontend/src/context`, `frontend/tests`
 
----
-
-## Build/Lint/Test Commands
-
-### Backend Commands
-
+## Install
 ```bash
-# Development server (with hot reload)
-cd backend && npm run dev
-
-# Build TypeScript
-cd backend && npm run build
-
-# Start production server
-cd backend && npm run start
-
-# Seed database with initial data
-cd backend && npm run db:seed
+npm install --prefix backend
+npm install --prefix frontend
 ```
 
-### Frontend Commands
+## Build / Lint / Test Commands
 
+Note: no lint scripts are currently configured in `backend/package.json` or `frontend/package.json`.
+
+### Backend commands
 ```bash
-# Development server (port 3000)
-cd frontend && npm run dev
-
-# Production build
-cd frontend && npm run build
-
-# Preview production build
-cd frontend && npm run preview
+npm --prefix backend run dev
+npm --prefix backend run build
+npm --prefix backend run start
+npm --prefix backend run db:seed
+npm --prefix backend run test
+npm --prefix backend run test:watch
+npm --prefix backend run test:coverage
 ```
 
-### Database Commands
-
+Run a single backend test file:
 ```bash
-# Run Prisma migrations
-cd backend && npx prisma migrate dev
-
-# Generate Prisma Client
-cd backend && npx prisma generate
-
-# Open Prisma Studio (database GUI)
-cd backend && npx prisma studio
+npm --prefix backend run test -- src/__tests__/userController.test.ts
 ```
 
----
-
-## Code Style Guidelines
-
-### TypeScript Configuration
-
-- **Strict mode enabled** - All TypeScript code must be type-safe
-- Use explicit types for function parameters and return values
-- Avoid `any` - use `unknown` if type is truly unknown
-
-### Naming Conventions
-
-| Type | Convention | Example |
-|------|------------|---------|
-| Files (components) | PascalCase | `UserDetail.tsx` |
-| Files (utilities) | camelCase | `syncDb.ts` |
-| Variables/Functions | camelCase | `getUsers()`, `userData` |
-| Constants | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT` |
-| Interfaces/Types | PascalCase | `UserAttributes` |
-| Database Models | PascalCase | `User`, `Payment` |
-
-### Import Organization
-
-Order imports as follows:
-1. External libraries (React, express, etc.)
-2. Internal modules (services, context)
-3. Relative imports (components, utils)
-4. Type imports
-
-```typescript
-// 1. External
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-// 2. Internal
-import api from '../services/api';
-import { useAuth } from '../context/AuthContext';
-
-// 3. Relative
-import UserForm from './UserForm';
-import './UserDetail.css';
-
-// 4. Types
-import { User } from '../types';
+Run a single backend test case by title:
+```bash
+npm --prefix backend run test -- -t "deberia obtener usuario por ID"
 ```
 
-### React Component Guidelines
-
-- Use functional components with hooks
-- Export components as named exports
-- Colocate styles with components (same folder)
-- Use TypeScript interfaces for props
-- Keep components small and focused
-
-```typescript
-// Good
-interface UserCardProps {
-  user: User;
-  onEdit: (id: number) => void;
-}
-
-export const UserCard: React.FC<UserCardProps> = ({ user, onEdit }) => {
-  return (
-    <div className="user-card">
-      <h3>{user.name}</h3>
-      <button onClick={() => onEdit(user.id)}>Edit</button>
-    </div>
-  );
-};
+### Frontend commands
+```bash
+npm --prefix frontend run dev
+npm --prefix frontend run build
+npm --prefix frontend run preview
+npm --prefix frontend run test
+npm --prefix frontend run test:ui
+npm --prefix frontend run test:headed
 ```
 
-### Error Handling
-
-- Always wrap async operations in try-catch
-- Return proper HTTP status codes
-- Provide meaningful error messages
-- Log errors for debugging
-
-```typescript
-// Good
-export const getUser = async (req: Request, res: Response) => {
-  try {
-    const user = await prisma.user.findUnique({ where: { id: Number(req.params.id) } });
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-    res.json({ success: true, data: user });
-  } catch (error) {
-    console.error('Error in getUser:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
-};
+Run a single frontend Playwright spec file:
+```bash
+npm --prefix frontend run test -- tests/auth.spec.ts
 ```
 
-### API Response Format
-
-All API responses should follow this structure:
-
-```typescript
-// Success
-{ success: true, data: {...} }
-
-// Error
-{ success: false, message: 'Error description' }
+Run a single frontend Playwright test by title:
+```bash
+npm --prefix frontend run test -- -g "deberia iniciar sesion exitosamente"
 ```
 
-### Database (Prisma)
-
-- Always use transactions for multiple related operations
-- Use proper error handling with Prisma errors
-- Validate data before database operations
-
-### Security
-
-- Never expose sensitive data in responses
-- Hash passwords with bcrypt
-- Validate all user inputs
-- Use JWT for authentication
-
-### File Structure
-
-```
-backend/
-├── src/
-│   ├── config/         # Database, JWT config
-│   ├── controllers/    # Request handlers
-│   ├── middleware/    # Auth, validation
-│   ├── routes/        # API routes
-│   ├── services/      # Business logic
-│   ├── utils/         # Helper functions
-│   └── app.ts         # Express app entry
-└── prisma/
-    └── schema.prisma   # Database schema
-
-frontend/
-├── src/
-│   ├── components/    # Reusable components
-│   ├── context/      # React Context
-│   ├── pages/        # Page components
-│   ├── services/     # API calls
-│   ├── types/        # TypeScript types
-│   └── styles/       # Global styles
+### Prisma / DB commands
+```bash
+npx --prefix backend prisma generate
+npx --prefix backend prisma migrate dev
+npx --prefix backend prisma studio
 ```
 
-### Testing
+## Code Style Rules
 
-- No test framework configured yet
-- When adding tests, use Vitest for frontend
-- Follow AAA pattern: Arrange, Act, Assert
+## TypeScript and types
+- `strict` mode is enabled in both apps; frontend also enforces unused checks.
+- Prefer explicit types on exported functions and public service methods.
+- Avoid `any`; use `unknown`, discriminated unions, or explicit interfaces.
+- For authenticated requests, prefer typed request extensions (`AuthRequest`) over repetitive `(req as any)`.
 
-### Git Conventions
+## Formatting
+- 2-space indentation, semicolons, single quotes.
+- Keep object literals and JSX props multiline when they become long.
+- Keep functions focused and avoid deeply nested logic.
+- Do not introduce a formatter config unless requested; preserve local style.
 
-- Use meaningful commit messages
-- Keep commits atomic and focused
-- Follow conventional commits: `feat:`, `fix:`, `docs:`, `refactor:`
+## Imports
+Use this order when editing files:
+1. External packages (`react`, `express`, `axios`, etc.)
+2. Internal/aliased modules (if present)
+3. Relative imports (`../`, `./`)
+4. Style imports (`.css`) last
 
----
+Prefer stable ordering within groups when practical.
 
-## Key Files
+## Naming
+- Components/types/interfaces: PascalCase.
+- Variables/functions: camelCase.
+- Constants: UPPER_SNAKE_CASE only for true constants.
+- Route segments: kebab-case for multi-word paths.
+- Keep naming in Spanish or English consistent with surrounding file.
 
-| File | Purpose |
-|------|---------|
-| `backend/src/app.ts` | Express server setup |
-| `backend/prisma/schema.prisma` | Database models |
-| `frontend/src/App.tsx` | Main React app with routing |
-| `frontend/src/context/AuthContext.tsx` | Authentication state |
+## Backend conventions
+- Controllers are async and wrapped in `try/catch`.
+- Use early returns for validation/auth/not-found branches.
+- Return consistent JSON envelopes:
+  - success -> `{ success: true, data: ... }`
+  - error -> `{ success: false, message: '...' }`
+- Use proper status codes (`400`, `401`, `403`, `404`, `500`).
+- Never expose secrets or password hashes in responses.
+- Prefer Prisma `select`/`include` intentionally; fetch only needed fields.
+- Hash passwords with `bcryptjs` before writing user credentials.
 
----
+## Frontend conventions
+- Functional components and hooks only.
+- Keep API calls in `src/services/*`, not directly in page JSX.
+- Reuse `src/services/api.ts` Axios instance and auth interceptors.
+- Service functions should return `response.data` payloads.
+- Handle loading, empty, and error states explicitly in pages.
+- Keep page-local styles colocated with the page/component.
 
-## Running the Application
+## Error handling
+- Backend: log with context and return safe, user-readable messages.
+- Frontend: show visible feedback (toast/alert/message) on failures.
+- Do not silently swallow errors.
 
-1. **Start backend**: `cd backend && npm run dev` (runs on port 3001)
-2. **Start frontend**: `cd frontend && npm run dev` (runs on port 3000)
-3. **Default login**: admin@gimnasio.com / admin123
+## Testing guidelines
+- Backend tests: Jest + Supertest in `backend/src/__tests__`.
+- Frontend tests: Playwright specs in `frontend/tests`.
+- Assert both status code and response body shape for API tests.
+- Prefer user-observable assertions in Playwright tests.
+- Keep tests deterministic and isolated from external dependencies.
+
+## Cursor/Copilot Rules Check
+
+Searched and found no files at:
+- `.cursorrules`
+- `.cursor/rules/`
+- `.github/copilot-instructions.md`
+
+If these files are added later, treat them as higher-priority local instructions.
+
+## Agent Workflow Expectations
+- Make minimal, targeted edits.
+- Avoid broad refactors unless explicitly requested.
+- If docs conflict with code behavior, trust code and update docs in same change.
+- Run relevant build/tests for touched areas when feasible.
