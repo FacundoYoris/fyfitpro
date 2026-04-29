@@ -68,13 +68,17 @@ input, select, textarea {
 .main-content {
   flex: 1;
   margin-left: 260px;
-  background-color: var(--gray-50);
+  background-color: transparent;
   min-height: 100vh;
   transition: margin-left 0.2s ease;
 }
 
 .app-container.sidebar-collapsed .main-content {
   margin-left: 78px;
+}
+
+.mobile-topbar {
+  display: none;
 }
 
 .mobile-menu-btn {
@@ -95,9 +99,34 @@ input, select, textarea {
 }
 
 @media (max-width: 768px) {
+  .mobile-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 41;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 78px;
+    padding: calc(env(safe-area-inset-top, 0px) + 0.55rem) 0.75rem 0.6rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.9));
+    box-shadow: 0 10px 22px rgba(2, 6, 23, 0.35);
+  }
+
+  .mobile-topbar-logo {
+    width: 148px;
+    height: 52px;
+    display: block;
+    object-fit: contain;
+    transform: scale(1.22);
+    transform-origin: left center;
+  }
+
   .main-content {
     margin-left: 0;
-    padding: 1rem;
+    padding: calc(env(safe-area-inset-top, 0px) + 4.25rem) 0 0;
   }
 
   .app-container.sidebar-collapsed .main-content {
@@ -105,6 +134,10 @@ input, select, textarea {
   }
 
   .mobile-menu-btn {
+    position: static;
+    top: auto;
+    left: auto;
+    z-index: auto;
     display: inline-flex;
   }
 }

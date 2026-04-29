@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Dumbbell, CreditCard, CheckCircle2, AlertTriangle, Timer, ChevronLeft, ChevronRight, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { Dumbbell, CreditCard, CheckCircle2, AlertTriangle, UserCircle2 } from 'lucide-react';
 import authService from '../../services/authService';
-import memberService from '../../services/memberService';
-import { MemberRoutine, MemberRoutineDay, WorkoutLogEntry } from '../../types';
+import { useAuth } from '../../context/AuthContext';
 import './Profile.css';
 
 interface UserProfile {
@@ -38,45 +37,16 @@ interface UserProfile {
   isPaid: boolean;
 }
 
-interface CalendarCell {
-  day: number;
-  date: string;
-  isOtherMonth: boolean;
-  routineDay: {
-    id: number;
-    name: string;
-    dayNumber: number;
-  } | null;
-  session: {
-    id: number;
-    status: string;
-    exerciseCount: number;
-  } | null;
-}
-
-const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
 export const Profile = () => {
+  const { isAdmin } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [routine, setRoutine] = useState<MemberRoutine | null>(null);
-  const [calendarDays, setCalendarDays] = useState<CalendarCell[]>([]);
-  const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
-  const [calendarYear, setCalendarYear] = useState(new Date().getFullYear());
-  const [selectedDay, setSelectedDay] = useState<CalendarCell | null>(null);
-  const [showLogModal, setShowLogModal] = useState(false);
-  const [logEntries, setLogEntries] = useState<WorkoutLogEntry[]>([]);
-  const [saving, setSaving] = useState(false);
-  const [expandedDay, setExpandedDay] = useState<number | null>(null);
 
   useEffect(() => {
     loadProfile();
   }, []);
-
-  useEffect(() => {
-    buildCalendar();
-  }, [calendarMonth, calendarYear, routine]);
 
   const loadProfile = async () => {
     try {
@@ -84,7 +54,6 @@ export const Profile = () => {
       if (response.success && response.data) {
         setProfile(response.data);
       }
-      await loadRoutine();
     } catch (error) {
       console.error('Error loading profile:', error);
     } finally {
@@ -92,80 +61,14 @@ export const Profile = () => {
     }
   };
 
-  const loadRoutine = async () => {
-    try {
-      const response = await memberService.getActiveRoutine();
-      if (response.success && response.data) {
-        setRoutine(response.data);
-      }
-    } catch (error) {
-      console.error('Error loading routine:', error);
-    }
-  };
-
-  const buildCalendar = async () => {
-    try {
-      const response = await memberService.getCalendar(calendarMonth + 1, calendarYear);
-      if (response.success && response.data) {
-        setCalendarDays(response.data.days as CalendarCell[]);
-      }
-    } catch (error) {
-      console.error('Error building calendar:', error);
-    }
-  };
-
   const formatDate = (date: string | null) =>
     date ? new Date(date).toLocaleDateString('es-AR') : '-';
 
-  const handleDayClick = (cell: CalendarCell) => {
-    if (!cell.routineDay || cell.isOtherMonth) return;
-    setSelectedDay(cell);
-    setShowLogModal(true);
-
-    if (routine) {
-      const dayExercises = routine.days.find(d => d.id === cell.routineDay?.id)?.routineExercises || [];
-      setLogEntries(dayExercises.map(ex => ({
-        exerciseId: ex.exerciseId,
-        sets: Array.from({ length: ex.sets }, (_, i) => ({
-          setNumber: i + 1,
-          weight: ex.lastWeight || undefined,
-          reps: ex.reps,
-        })),
-      })));
-    }
-  };
-
-  const handleSaveLogs = async () => {
-    if (!selectedDay) return;
-    setSaving(true);
-    try {
-      await memberService.saveWorkoutLogs({
-        date: selectedDay.date,
-        routineDayId: selectedDay.routineDay!.id,
-        entries: logEntries,
-        status: 'completed',
-      });
-      setShowLogModal(false);
-      buildCalendar();
-    } catch (error) {
-      console.error('Error saving logs:', error);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const changeMonth = (delta: number) => {
-    let newMonth = calendarMonth + delta;
-    let newYear = calendarYear;
-    if (newMonth < 0) { newMonth = 11; newYear--; }
-    if (newMonth > 11) { newMonth = 0; newYear++; }
-    setCalendarMonth(newMonth);
-    setCalendarYear(newYear);
-  };
-
-  const toggleDayDetail = (day: number) => {
-    setExpandedDay(expandedDay === day ? null : day);
-  };
+  const isPaymentOverdue = useMemo(() => {
+    if (isAdmin || !profile) return false;
+    const today = new Date();
+    return today.getDate() > 10 && !profile.isPaid;
+  }, [isAdmin, profile]);
 
   if (loading) {
     return (
@@ -199,7 +102,45 @@ export const Profile = () => {
         </div>
       </div>
 
+      {isPaymentOverdue ? (
+        <div className="profile-alert overdue">
+          <AlertTriangle size={18} />
+          <div>
+            <strong>Cuota atrasada</strong>
+            <p>Tu pago del mes sigue pendiente y ya pasó el día 10. Regularizalo para evitar bloqueos de servicio.</p>
+          </div>
+        </div>
+      ) : null}
+
       <div className="profile-panels">
+        <section className="profile-panel">
+          <header>
+            <div className="panel-icon neutral"><UserCircle2 size={18} /></div>
+            <div>
+              <h3>Mi información</h3>
+              <p>Datos personales registrados</p>
+            </div>
+          </header>
+          <div className="plan-details">
+            <div className="plan-row">
+              <span>Nombre</span>
+              <strong>{profile?.user.firstName} {profile?.user.lastName}</strong>
+            </div>
+            <div className="plan-row">
+              <span>Email</span>
+              <strong>{profile?.user.email || '-'}</strong>
+            </div>
+            <div className="plan-row">
+              <span>Telefono</span>
+              <strong>{profile?.user.phone || '-'}</strong>
+            </div>
+            <div className="plan-row">
+              <span>DNI</span>
+              <strong>{profile?.user.dni || '-'}</strong>
+            </div>
+          </div>
+        </section>
+
         <section className="profile-panel">
           <header>
             <div className="panel-icon primary"><Dumbbell size={18} /></div>
@@ -258,183 +199,17 @@ export const Profile = () => {
         </section>
       </div>
 
-      {routine ? (
-        <section className="profile-panel calendar-section">
+      {!profile?.payment ? (
+        <section className="profile-panel">
           <header>
-            <div className="panel-icon neutral"><Timer size={18} /></div>
+            <div className="panel-icon warning"><AlertTriangle size={18} /></div>
             <div>
-              <h3>Mi Rutina - {routine.routine.name}</h3>
-              <p>{routine.days.length} días por semana</p>
+              <h3>Sin pagos registrados</h3>
+              <p>Contacta a administracion para regularizar tu membresia.</p>
             </div>
           </header>
-
-          <div className="calendar-nav">
-            <button onClick={() => changeMonth(-1)} className="cal-nav-btn"><ChevronLeft size={18} /></button>
-            <span className="cal-month-label">{MONTHS[calendarMonth]} {calendarYear}</span>
-            <button onClick={() => changeMonth(1)} className="cal-nav-btn"><ChevronRight size={18} /></button>
-          </div>
-
-          <div className="cal-legend">
-            <span className="cal-legend-item"><i className="dot dot-routine" /> Día de rutina</span>
-            <span className="cal-legend-item"><i className="dot dot-completed" /> Completado</span>
-            <span className="cal-legend-item"><i className="dot dot-today" /> Hoy</span>
-          </div>
-
-          <div className="calendar-table">
-            <div className="cal-header">
-              {WEEKDAYS.map(d => <div key={d} className="cal-h-cell">{d}</div>)}
-            </div>
-            <div className="cal-body">
-              {Array.from({ length: Math.ceil(calendarDays.length / 6) }, (_, wi) => (
-                <div key={wi} className="cal-row">
-                  {calendarDays.slice(wi * 6, wi * 6 + 6).map((cell, idx) => {
-                    const hasRoutine = !!cell.routineDay && !cell.isOtherMonth;
-                    const isCompleted = cell.session?.status === 'completed';
-                    const isToday = !cell.isOtherMonth && new Date(cell.date).toDateString() === new Date().toDateString();
-
-                    return (
-                      <div
-                        key={idx}
-                        className={`cal-cell ${cell.isOtherMonth ? 'other-month' : ''} ${hasRoutine ? 'has-routine' : ''} ${isCompleted ? 'completed' : ''} ${isToday ? 'today' : ''} ${hasRoutine ? 'clickable' : ''}`}
-                        onClick={() => handleDayClick(cell)}
-                      >
-                        <span className="cal-day-num">{cell.day}</span>
-                        {hasRoutine && (
-                          <span className="cal-day-badge">D{cell.routineDay!.dayNumber}</span>
-                        )}
-                        {hasRoutine && cell.session?.exerciseCount ? (
-                          <span className="cal-ex-count">{cell.session.exerciseCount} ejercicios</span>
-                        ) : null}
-                        {isCompleted && <span className="cal-check">✓</span>}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="routine-exercises-section">
-            <h4>Ejercicios de la rutina</h4>
-            {routine.days.map((day: MemberRoutineDay) => (
-              <div key={day.id} className="routine-day-block">
-                <button className="routine-day-header" onClick={() => toggleDayDetail(day.id)}>
-                  <span>{day.name}</span>
-                  {expandedDay === day.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
-                {expandedDay === day.id && (
-                  <ul className="exercise-list">
-                    {day.routineExercises.map((ex) => (
-                      <li key={ex.id} className="exercise-item">
-                        <span className="exercise-name">{ex.exercise.name}</span>
-                        <span className="exercise-sets">{ex.sets}x{ex.reps}</span>
-                        {ex.lastWeight && (
-                          <span className="exercise-weight">Último: {ex.lastWeight}kg</span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            ))}
-          </div>
         </section>
-      ) : (
-        <section className="profile-panel routines-panel">
-          <header>
-            <div className="panel-icon neutral"><Timer size={18} /></div>
-            <div>
-              <h3>Mis rutinas</h3>
-              <p>Actividades asignadas recientemente</p>
-            </div>
-          </header>
-          <div className="empty-routines">
-            <p>No tienes rutinas asignadas</p>
-            <p className="empty-hint">Contacta al administrador para que te asigne una rutina</p>
-          </div>
-        </section>
-      )}
-
-      {showLogModal && selectedDay && (
-        <div className="modal-overlay" onClick={() => setShowLogModal(false)}>
-          <div className="modal-content log-modal" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Registrar - {selectedDay.routineDay?.name}</h3>
-              <button className="modal-close" onClick={() => setShowLogModal(false)}>
-                <X size={18} />
-              </button>
-            </div>
-            <div className="modal-body">
-              {logEntries.map((entry, idx) => {
-                const exercise = routine?.days
-                  .flatMap(d => d.routineExercises)
-                  .find(e => e.exerciseId === entry.exerciseId);
-                const setsCount = entry.sets.length;
-                const allSameReps = setsCount > 1 && entry.sets.every(s => s.reps === entry.sets[0].reps);
-
-                return (
-                  <div key={idx} className="log-exercise">
-                    <h4>{exercise?.exercise.name}</h4>
-                    {allSameReps ? (
-                      <div className="log-common-row">
-                        <span className="log-label">Peso ({entry.sets[0].reps} reps c/u):</span>
-                        <input
-                          type="number"
-                          value={entry.sets[0].weight || ''}
-                          onChange={(e) => {
-                            const newEntries = [...logEntries];
-                            const w = parseFloat(e.target.value) || 0;
-                            newEntries[idx].sets.forEach(s => s.weight = w);
-                            setLogEntries(newEntries);
-                          }}
-                          placeholder="kg"
-                          className="log-input"
-                        />
-                      </div>
-                    ) : (
-                      <div className="log-sets-list">
-                        {entry.sets.map((set, si) => (
-                          <div key={si} className="log-set-row">
-                            <span className="log-set-label">Set {set.setNumber}</span>
-                            <input
-                              type="number"
-                              value={set.weight || ''}
-                              onChange={(e) => {
-                                const newEntries = [...logEntries];
-                                newEntries[idx].sets[si].weight = parseFloat(e.target.value) || 0;
-                                setLogEntries(newEntries);
-                              }}
-                              placeholder="kg"
-                              className="log-input small"
-                            />
-                            <input
-                              type="number"
-                              value={set.reps || ''}
-                              onChange={(e) => {
-                                const newEntries = [...logEntries];
-                                newEntries[idx].sets[si].reps = parseInt(e.target.value) || 0;
-                                setLogEntries(newEntries);
-                              }}
-                              placeholder="reps"
-                              className="log-input small"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="modal-footer">
-              <button className="btn-cancel" onClick={() => setShowLogModal(false)}>Cancelar</button>
-              <button className="btn-save" onClick={handleSaveLogs} disabled={saving}>
-                <Save size={16} /> {saving ? 'Guardando...' : 'Guardar'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 };

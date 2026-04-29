@@ -237,3 +237,127 @@ export interface WorkoutLogPayload {
   status?: 'pending' | 'completed' | 'skipped';
   notes?: string;
 }
+
+export interface MemberExerciseOption {
+  id: number;
+  name: string;
+  muscleGroup: string | null;
+  maxWeight: number;
+  lastWeight: number;
+  sessionsWithLogs: number;
+}
+
+export interface MemberExerciseProgressionPoint {
+  date: string;
+  reps: number;
+  maxWeight: number;
+  volume: number;
+}
+
+export interface MemberStats {
+  filters: {
+    period: string;
+    routineFilter: string;
+    muscleGroup: string | null;
+    availableRoutines: {
+      value: string;
+      label: string;
+      enabled: boolean;
+    }[];
+    availableMuscleGroups: string[];
+  };
+  attendance: {
+    expectedSessions: number;
+    completedSessions: number;
+    pendingSessions: number;
+    missedSessions: number;
+    completionRate: number;
+    weeklyTimeline: {
+      weekStart: string;
+      expected: number;
+      completed: number;
+      pending: number;
+      missed: number;
+      completionRate: number;
+    }[];
+  };
+  period: {
+    startDate: string;
+    endDate: string;
+  };
+  indicators: {
+    currentStreak: number;
+    bestStreak: number;
+    consistencyInRange: number;
+    completedInRange: number;
+    volumeInRange: number;
+    averageVolumePerSessionInRange: number;
+    uniqueExercisesInRange: number;
+    lastCompletedAt: string | null;
+    exerciseFrequency: {
+      exerciseId: number;
+      name: string;
+      muscleGroup: string | null;
+      sessionsCount: number;
+    }[];
+    abandonedExercises: {
+      exerciseId: number;
+      name: string;
+      muscleGroup: string | null;
+      previousSessions: number;
+      currentSessions: number;
+      dropPercent: number;
+    }[];
+    muscleVolumeBreakdown: {
+      muscleGroup: string;
+      volume: number;
+    }[];
+  };
+  exercises: MemberExerciseOption[];
+  selectedExerciseId: number | null;
+  progression: MemberExerciseProgressionPoint[];
+  exerciseSnapshot: {
+    referenceReps: number | null;
+    initialWeight: number | null;
+    latestWeight: number | null;
+    maxWeight: number | null;
+    progressPercent: number | null;
+  };
+}
+
+export interface WeightLogInput {
+  date: string;
+  weight: number;
+  note?: string;
+}
+
+export interface MemberWeightStats {
+  period: {
+    period: string;
+    startDate: string;
+    endDate: string;
+  };
+  summary: {
+    currentWeight: number | null;
+    initialWeight: number | null;
+    changeKg: number;
+    changePercent: number;
+    weeklyRate: number;
+    entriesCount: number;
+  };
+  trend: {
+    date: string;
+    weight: number;
+    trendWeight: number;
+  }[];
+  weeklyAverages: {
+    weekStart: string;
+    averageWeight: number;
+  }[];
+  history: {
+    id: number;
+    date: string;
+    weight: number;
+    note: string | null;
+  }[];
+}

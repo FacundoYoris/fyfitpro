@@ -17,6 +17,14 @@ interface DayExercise {
   repScheme?: string;
 }
 
+type RandomVolume = 'light' | 'balanced' | 'high';
+
+interface RandomRoutineConfig {
+  daysCount: number;
+  focusGroups: string[];
+  volume: RandomVolume;
+}
+
 const buildCustomReps = (count: number, values: string[] = []) => {
   const normalizedCount = Math.max(0, count);
   const result: string[] = [];
@@ -32,6 +40,57 @@ interface RoutineDay {
   name: string;
   exercises: DayExercise[];
 }
+
+const shuffle = <T,>(items: T[]) => {
+  const array = [...items];
+  for (let i = array.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+const getExercisesPerDay = (volume: RandomVolume, daysCount: number) => {
+  if (volume === 'light') {
+    return daysCount >= 5 ? 4 : 5;
+  }
+
+  if (volume === 'high') {
+    return daysCount <= 2 ? 8 : 7;
+  }
+
+  return daysCount <= 2 ? 7 : 6;
+};
+
+const distributeTargets = (weights: Record<string, number>, total: number) => {
+  const entries = Object.entries(weights).filter(([, weight]) => weight > 0);
+  if (entries.length === 0 || total <= 0) {
+    return {} as Record<string, number>;
+  }
+
+  const sum = entries.reduce((acc, [, weight]) => acc + weight, 0);
+  const targets: Record<string, number> = {};
+  const remainders: Array<{ group: string; remainder: number }> = [];
+  let assigned = 0;
+
+  entries.forEach(([group, weight]) => {
+    const exact = (weight / sum) * total;
+    const base = Math.floor(exact);
+    targets[group] = base;
+    assigned += base;
+    remainders.push({ group, remainder: exact - base });
+  });
+
+  const missing = total - assigned;
+  remainders
+    .sort((a, b) => b.remainder - a.remainder)
+    .slice(0, missing)
+    .forEach(({ group }) => {
+      targets[group] = (targets[group] || 0) + 1;
+    });
+
+  return targets;
+};
 
 const dayNames = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
@@ -63,6 +122,13 @@ export const RoutineForm = () => {
   const [activeMuscleGroup, setActiveMuscleGroup] = useState<string>('');
   const [toast, setToast] = useState<{ show: boolean; message: string; type: 'success' | 'error' }>({ show: false, message: '', type: 'success' });
   const [showCreateExerciseModal, setShowCreateExerciseModal] = useState(false);
+  const [showRandomRoutineModal, setShowRandomRoutineModal] = useState(false);
+  const [randomStep, setRandomStep] = useState(1);
+  const [randomConfig, setRandomConfig] = useState<RandomRoutineConfig>({
+    daysCount: 3,
+    focusGroups: [],
+    volume: 'balanced',
+  });
   const [newExerciseData, setNewExerciseData] = useState({
     name: '',
     muscleGroup: '',
@@ -230,6 +296,123 @@ export const RoutineForm = () => {
     setDays(newDays);
   };
 
+  const openRandomRoutineModal = () => {
+    setRandomConfig({
+      daysCount: Math.max(1, parseInt(formData.daysCount, 10) || 3),
+      focusGroups: [],
+      volume: 'balanced',
+    });
+    setRandomStep(1);
+    setShowRandomRoutineModal(true);
+  };
+
+  const generateRandomRoutine = () => {
+    const daysCount = Math.max(1, Math.min(7, randomConfig.daysCount));
+    const exercisesPerDay = getExercisesPerDay(randomConfig.volume, daysCount);
+    const totalSlots = daysCount * exercisesPerDay;
+
+    const grouped = exercises.reduce<Record<string, Exercise[]>>((acc, exercise) => {
+      const group = exercise.muscleGroup || 'General';
+      if (!acc[group]) {
+        acc[group] = [];
+      }
+      acc[group].push(exercise);
+      return acc;
+    }, {});
+
+    const groupNames = Object.keys(grouped);
+    if (groupNames.length === 0) {
+      showToast('No hay ejercicios cargados para generar rutina', 'error');
+      return;
+    }
+
+    const weights: Record<string, number> = {};
+    groupNames.forEach((group) => {
+      const base = 1;
+      const boosted = randomConfig.focusGroups.includes(group) ? 2 : 0;
+      const stockBonus = Math.min(1.5, grouped[group].length / 10);
+      weights[group] = base + boosted + stockBonus;
+    });
+
+    const targets = distributeTargets(weights, totalSlots);
+    const dayPlans: RoutineDay[] = Array.from({ length: daysCount }).map((_, index) => ({
+      dayNumber: index + 1,
+      name: dayNames[index] || `Día ${index + 1}`,
+      exercises: [],
+    }));
+
+    const orderedGroups = shuffle(groupNames);
+    let guard = 0;
+
+    while (guard < totalSlots * 10) {
+      guard += 1;
+      const pendingGroups = orderedGroups.filter((group) => (targets[group] || 0) > 0);
+      if (pendingGroups.length === 0) {
+        break;
+      }
+
+      const group = pendingGroups[Math.floor(Math.random() * pendingGroups.length)];
+      const dayIndex = Math.floor(Math.random() * daysCount);
+      const day = dayPlans[dayIndex];
+
+      if (day.exercises.length >= exercisesPerDay) {
+        continue;
+      }
+
+      const alreadyInDay = new Set(day.exercises.map((exercise) => exercise.exerciseId));
+      const candidates = shuffle(grouped[group]).filter((exercise) => !alreadyInDay.has(exercise.id));
+
+      if (candidates.length === 0) {
+        targets[group] = Math.max(0, (targets[group] || 0) - 1);
+        continue;
+      }
+
+      const selected = candidates[0];
+      const repScheme = selected.repScheme?.trim() || '';
+      const isFailure = repScheme.toLowerCase().includes('fallo');
+
+      day.exercises.push({
+        exerciseId: selected.id,
+        sets: selected.defaultSets || 3,
+        reps: isFailure ? 0 : selected.defaultReps || 10,
+        repScheme: repScheme || (isFailure ? 'Fallo' : ''),
+      });
+
+      targets[group] = Math.max(0, (targets[group] || 0) - 1);
+    }
+
+    dayPlans.forEach((day) => {
+      if (day.exercises.length >= exercisesPerDay) {
+        return;
+      }
+
+      const alreadyInDay = new Set(day.exercises.map((exercise) => exercise.exerciseId));
+      const fallbackPool = shuffle(exercises).filter((exercise) => !alreadyInDay.has(exercise.id));
+      while (day.exercises.length < exercisesPerDay && fallbackPool.length > 0) {
+        const selected = fallbackPool.shift();
+        if (!selected) {
+          break;
+        }
+
+        const repScheme = selected.repScheme?.trim() || '';
+        const isFailure = repScheme.toLowerCase().includes('fallo');
+
+        day.exercises.push({
+          exerciseId: selected.id,
+          sets: selected.defaultSets || 3,
+          reps: isFailure ? 0 : selected.defaultReps || 10,
+          repScheme: repScheme || (isFailure ? 'Fallo' : ''),
+        });
+      }
+    });
+
+    setDays(dayPlans);
+    setActiveDay(0);
+    setFormData((prev) => ({ ...prev, daysCount: String(daysCount) }));
+    setShowRandomRoutineModal(false);
+    showToast('Rutina dinámica generada correctamente');
+  };
+
   const handleCreateExercise = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -337,7 +520,14 @@ export const RoutineForm = () => {
 
       <div className="routine-form-grid">
         <div className="routine-form-card">
-          <h3 className="routine-form-card-title">DATOS DE LA RUTINA</h3>
+          <div className="routine-form-card-title-row">
+            <h3 className="routine-form-card-title">DATOS DE LA RUTINA</h3>
+            {!isEdit ? (
+              <button type="button" className="btn-random-routine" onClick={openRandomRoutineModal}>
+                Rutina dinámica
+              </button>
+            ) : null}
+          </div>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label">Nombre</label>
@@ -582,6 +772,141 @@ export const RoutineForm = () => {
           )}
         </div>
       </div>
+
+      {showRandomRoutineModal && (
+        <div className="modal-overlay" onClick={() => setShowRandomRoutineModal(false)}>
+          <div className="modal random-routine-modal" onClick={(event) => event.stopPropagation()}>
+            <div className="modal-header">
+              <h3 className="modal-title">RUTINA DINAMICA</h3>
+              <button type="button" className="modal-close" onClick={() => setShowRandomRoutineModal(false)}>✕</button>
+            </div>
+
+            <div className="modal-body random-routine-body">
+              <div className="random-steps">
+                {[1, 2, 3].map((step) => (
+                  <div key={step} className={`random-step ${randomStep === step ? 'active' : ''}`}>
+                    {step}
+                  </div>
+                ))}
+              </div>
+
+              {randomStep === 1 ? (
+                <div className="random-step-content">
+                  <h4>¿Cuántos días por semana?</h4>
+                  <p>Define la frecuencia semanal para generar la estructura base.</p>
+                  <select
+                    className="form-select"
+                    value={randomConfig.daysCount}
+                    onChange={(event) => setRandomConfig((prev) => ({ ...prev, daysCount: Number(event.target.value) }))}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7].map((value) => (
+                      <option key={value} value={value}>{value} días</option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
+
+              {randomStep === 2 ? (
+                <div className="random-step-content">
+                  <h4>Músculos prioritarios (opcional)</h4>
+                  <p>Elige hasta 3 grupos para darles más protagonismo.</p>
+                  <div className="random-group-list">
+                    {exerciseGroups.map((group) => {
+                      const selected = randomConfig.focusGroups.includes(group);
+                      const blocked = !selected && randomConfig.focusGroups.length >= 3;
+
+                      return (
+                        <button
+                          key={group}
+                          type="button"
+                          className={`random-group-chip ${selected ? 'active' : ''}`}
+                          disabled={blocked}
+                          onClick={() => {
+                            setRandomConfig((prev) => {
+                              if (prev.focusGroups.includes(group)) {
+                                return {
+                                  ...prev,
+                                  focusGroups: prev.focusGroups.filter((item) => item !== group),
+                                };
+                              }
+
+                              if (prev.focusGroups.length >= 3) {
+                                return prev;
+                              }
+
+                              return {
+                                ...prev,
+                                focusGroups: [...prev.focusGroups, group],
+                              };
+                            });
+                          }}
+                        >
+                          {getMuscleIcon(group)} {group}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
+
+              {randomStep === 3 ? (
+                <div className="random-step-content">
+                  <h4>Volumen de rutina</h4>
+                  <p>Controla cuántos ejercicios por día querés que agregue.</p>
+                  <div className="random-volume-options">
+                    <button
+                      type="button"
+                      className={`random-volume-btn ${randomConfig.volume === 'light' ? 'active' : ''}`}
+                      onClick={() => setRandomConfig((prev) => ({ ...prev, volume: 'light' }))}
+                    >
+                      Ligero
+                    </button>
+                    <button
+                      type="button"
+                      className={`random-volume-btn ${randomConfig.volume === 'balanced' ? 'active' : ''}`}
+                      onClick={() => setRandomConfig((prev) => ({ ...prev, volume: 'balanced' }))}
+                    >
+                      Balanceado
+                    </button>
+                    <button
+                      type="button"
+                      className={`random-volume-btn ${randomConfig.volume === 'high' ? 'active' : ''}`}
+                      onClick={() => setRandomConfig((prev) => ({ ...prev, volume: 'high' }))}
+                    >
+                      Alto
+                    </button>
+                  </div>
+                  <div className="random-summary-box">
+                    <span>Dias: {randomConfig.daysCount}</span>
+                    <span>Ejercicios por día (aprox): {getExercisesPerDay(randomConfig.volume, randomConfig.daysCount)}</span>
+                    <span>
+                      Foco: {randomConfig.focusGroups.length > 0 ? randomConfig.focusGroups.join(', ') : 'Sin foco (equilibrada)'}
+                    </span>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            <div className="modal-footer random-routine-footer">
+              {randomStep > 1 ? (
+                <button type="button" className="btn btn-secondary" onClick={() => setRandomStep((prev) => prev - 1)}>
+                  Volver
+                </button>
+              ) : <span />}
+
+              {randomStep < 3 ? (
+                <button type="button" className="btn btn-primary" onClick={() => setRandomStep((prev) => prev + 1)}>
+                  Siguiente
+                </button>
+              ) : (
+                <button type="button" className="btn btn-primary" onClick={generateRandomRoutine}>
+                  Generar rutina
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {showCreateExerciseModal && (
         <div className="modal-overlay" onClick={() => setShowCreateExerciseModal(false)}>

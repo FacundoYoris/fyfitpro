@@ -7,6 +7,9 @@ import {
   ClipboardList,
   Dumbbell as DumbbellIcon,
   UserCircle2,
+  CalendarDays,
+  ChartNoAxesCombined,
+  Scale,
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
@@ -42,9 +45,13 @@ const adminMenuItems: { section: string; items: MenuItem[] }[] = [
 
 const userMenuItems: { section: string; items: MenuItem[] }[] = [
   {
-    section: 'Mi Perfil',
+    section: 'Mi Cuenta',
     items: [
-      { path: '/profile', label: 'Mi Perfil', icon: UserCircle2 },
+      { path: '/profile/estadisticas', label: 'Estadisticas', icon: ChartNoAxesCombined },
+      { path: '/profile/peso', label: 'Seguimiento de peso', icon: Scale },
+      { path: '/profile/seguimiento', label: 'Calendario y seguimiento', icon: CalendarDays },
+      { path: '/profile/rutina', label: 'Mi rutina', icon: ClipboardList },
+      { path: '/profile', label: 'Mi perfil', icon: UserCircle2 },
     ],
   },
 ];
@@ -93,6 +100,7 @@ export const Sidebar = ({
               <NavLink
                 key={item.path}
                 to={item.path}
+                end={item.path === '/profile'}
                 onClick={onCloseMobile}
                 className={({ isActive }) =>
                   `sidebar-link ${isActive ? 'active' : ''}`

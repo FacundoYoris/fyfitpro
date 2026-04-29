@@ -20,14 +20,17 @@ export const Layout = () => {
 
   return (
     <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''}`}>
-      <button
-        type="button"
-        className="mobile-menu-btn"
-        onClick={() => setMobileOpen(true)}
-        aria-label="Abrir menú"
-      >
-        <Menu size={20} />
-      </button>
+      <header className="mobile-topbar">
+        <img src="/logo-fy-fitpro.png" alt="FY FitPro" className="mobile-topbar-logo" />
+        <button
+          type="button"
+          className="mobile-menu-btn"
+          onClick={() => setMobileOpen(true)}
+          aria-label="Abrir menú"
+        >
+          <Menu size={20} />
+        </button>
+      </header>
 
       <Sidebar
         collapsed={collapsed}

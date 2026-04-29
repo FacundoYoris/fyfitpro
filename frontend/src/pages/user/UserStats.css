@@ -1,0 +1,651 @@
+.stats-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stats-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stats-main-left h2 {
+  margin: 0.2rem 0 0.45rem;
+  font-size: 1.65rem;
+}
+
+.stats-kicker {
+  margin: 0;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.stats-subtitle {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.86);
+  max-width: 560px;
+  line-height: 1.5;
+}
+
+.stats-period-label {
+  margin: 0.65rem 0 0;
+  font-size: 0.84rem;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.stats-range-panel {
+  padding-top: 1.1rem;
+}
+
+.stats-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 0.8rem;
+}
+
+.stats-preset-btn {
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  background: rgba(56, 189, 248, 0.12);
+  color: #bae6fd;
+  border-radius: 999px;
+  padding: 0.38rem 0.72rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.stats-preset-btn.active {
+  border-color: rgba(34, 197, 94, 0.8);
+  background: rgba(34, 197, 94, 0.22);
+  color: #dcfce7;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.3) inset;
+}
+
+.stats-preset-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.stats-range-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.stats-range-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: rgba(226, 232, 240, 0.78);
+  min-width: 170px;
+}
+
+.stats-range-controls input {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.85);
+  color: #f8fafc;
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.9rem;
+}
+
+.stats-range-controls select {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.85);
+  color: #f8fafc;
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.9rem;
+}
+
+.stats-range-btn {
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: rgba(15, 23, 42, 0.65);
+  color: #e2e8f0;
+  border-radius: 10px;
+  padding: 0.52rem 0.8rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.stats-range-btn.primary {
+  border-color: rgba(34, 197, 94, 0.6);
+  background: rgba(34, 197, 94, 0.18);
+  color: #bbf7d0;
+}
+
+.stats-range-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.stats-ring-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stats-ring {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 10px 28px rgba(2, 6, 23, 0.45);
+}
+
+.stats-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.stats-ring-inner strong {
+  font-size: 1.35rem;
+}
+
+.stats-ring-inner span {
+  font-size: 0.7rem;
+  color: rgba(148, 163, 184, 0.95);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.stats-card {
+  min-height: 265px;
+}
+
+.stats-values {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.stats-adherence-highlight {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.2rem;
+}
+
+.stats-adherence-highlight strong {
+  font-size: 1.5rem;
+  color: #22c55e;
+}
+
+.stats-adherence-highlight span {
+  font-size: 0.85rem;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.stats-adherence-copy {
+  margin: 0 0 0.55rem;
+  font-size: 0.82rem;
+  color: rgba(226, 232, 240, 0.86);
+}
+
+.stats-attendance-meter {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.18);
+  display: flex;
+  margin-bottom: 0.7rem;
+}
+
+.stats-attendance-meter .completed {
+  background: #22c55e;
+}
+
+.stats-attendance-meter .pending {
+  background: #f59e0b;
+}
+
+.stats-attendance-meter .missed {
+  background: #ef4444;
+}
+
+.stats-weekly-chart {
+  margin-top: 0.8rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.55rem;
+  min-height: 100px;
+  border-top: 1px solid rgba(148, 163, 184, 0.18);
+  padding-top: 0.65rem;
+}
+
+.stats-week-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.stats-week-bar-bg {
+  width: 16px;
+  height: 72px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.2);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.stats-week-bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+  border-radius: 999px;
+  min-height: 6px;
+}
+
+.stats-week-col span {
+  font-size: 0.72rem;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.stats-attendance-empty {
+  margin: 0.8rem 0 0;
+  font-size: 0.8rem;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.stats-frequency-chart {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.stats-frequency-row {
+  display: grid;
+  gap: 0.3rem;
+  cursor: help;
+}
+
+.stats-frequency-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.84rem;
+}
+
+.stats-frequency-labels span {
+  color: rgba(226, 232, 240, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stats-frequency-labels strong {
+  color: #f8fafc;
+}
+
+.stats-frequency-bar-bg {
+  width: 100%;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.2);
+  overflow: hidden;
+}
+
+.stats-frequency-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #38bdf8 0%, #22c55e 100%);
+}
+
+.stats-muscle-volume-chart {
+  display: grid;
+  gap: 0.62rem;
+}
+
+.stats-muscle-volume-row {
+  display: grid;
+  gap: 0.28rem;
+  cursor: help;
+}
+
+.stats-muscle-volume-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.84rem;
+}
+
+.stats-muscle-volume-labels span {
+  color: rgba(226, 232, 240, 0.9);
+}
+
+.stats-muscle-volume-labels strong {
+  color: #f8fafc;
+}
+
+.stats-muscle-volume-bar-bg {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.2);
+  overflow: hidden;
+}
+
+.stats-muscle-volume-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e 0%, #eab308 100%);
+}
+
+.stats-muscle-volume-help {
+  margin: 0.75rem 0 0;
+  font-size: 0.77rem;
+  color: rgba(148, 163, 184, 0.92);
+}
+
+.stats-abandoned-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.stats-abandoned-row {
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.08);
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  cursor: help;
+}
+
+.stats-abandoned-row strong {
+  display: block;
+  font-size: 0.86rem;
+  color: #fee2e2;
+}
+
+.stats-abandoned-row span {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(254, 226, 226, 0.8);
+}
+
+.stats-abandoned-row em {
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fca5a5;
+}
+
+.stats-values div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.92rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+  padding-bottom: 0.45rem;
+}
+
+.stats-values div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.stats-values span {
+  color: rgba(226, 232, 240, 0.76);
+}
+
+.stats-values strong {
+  color: #f8fafc;
+}
+
+.stats-exercise-panel {
+  overflow: hidden;
+}
+
+.stats-exercise-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.95rem;
+  flex-wrap: wrap;
+}
+
+.stats-exercise-toolbar label {
+  color: rgba(226, 232, 240, 0.72);
+  font-size: 0.9rem;
+}
+
+.stats-exercise-toolbar select {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.85);
+  color: white;
+  border-radius: 10px;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  min-width: 280px;
+}
+
+.stats-exercise-toolbar select:disabled {
+  opacity: 0.65;
+}
+
+.stats-exercise-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.stats-exercise-overview div {
+  background: rgba(2, 6, 23, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 12px;
+  padding: 0.7rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.stats-exercise-overview svg {
+  color: #60a5fa;
+}
+
+.stats-exercise-overview span {
+  font-size: 0.78rem;
+  color: rgba(226, 232, 240, 0.72);
+}
+
+.stats-exercise-overview strong {
+  font-size: 1rem;
+}
+
+.stats-loading-inline {
+  margin: 0 0 1rem;
+  color: rgba(148, 163, 184, 0.9);
+  font-size: 0.9rem;
+}
+
+.stats-snapshot-note {
+  margin: 0 0 1rem;
+  color: rgba(148, 163, 184, 0.95);
+  font-size: 0.82rem;
+}
+
+.stats-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.stats-chart-card {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  padding: 0.85rem;
+  background: rgba(2, 6, 23, 0.4);
+  max-width: 760px;
+}
+
+.stats-chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.55rem;
+}
+
+.stats-chart-head h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.stats-chart-head span {
+  color: rgba(148, 163, 184, 0.92);
+  font-size: 0.8rem;
+}
+
+.stats-chart-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.stats-chart-tooltip {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  z-index: 2;
+  background: rgba(2, 6, 23, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.75rem;
+}
+
+.stats-chart-tooltip strong {
+  color: #f8fafc;
+}
+
+.stats-chart-tooltip span {
+  color: rgba(226, 232, 240, 0.85);
+}
+
+.stats-chart {
+  width: 100%;
+  max-height: 210px;
+}
+
+.stats-chart-axis {
+  stroke: rgba(148, 163, 184, 0.38);
+  stroke-width: 1;
+}
+
+.stats-chart-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: rgba(148, 163, 184, 0.94);
+}
+
+.stats-empty-chart {
+  border: 1px dashed rgba(148, 163, 184, 0.32);
+  border-radius: 12px;
+  padding: 1rem;
+  color: rgba(226, 232, 240, 0.78);
+  text-align: center;
+  background: rgba(2, 6, 23, 0.33);
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-card {
+    min-height: auto;
+    padding: 1rem;
+  }
+
+  .stats-values div {
+    font-size: 0.86rem;
+  }
+
+  .stats-main {
+    gap: 1rem;
+  }
+
+  .stats-range-controls {
+    gap: 0.5rem;
+  }
+
+  .stats-range-controls label {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .stats-range-controls select,
+  .stats-range-controls input,
+  .stats-range-btn {
+    width: 100%;
+  }
+
+  .stats-exercise-panel {
+    padding: 1rem;
+  }
+
+  .stats-exercise-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: rgba(15, 23, 42, 0.96);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 10px;
+    padding: 0.55rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .stats-exercise-toolbar label {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+
+  .stats-main-left h2 {
+    font-size: 1.4rem;
+  }
+
+  .stats-charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-chart-card {
+    max-width: 100%;
+  }
+
+  .stats-ring {
+    width: 114px;
+    height: 114px;
+  }
+
+  .stats-exercise-toolbar select {
+    min-width: 100%;
+  }
+}

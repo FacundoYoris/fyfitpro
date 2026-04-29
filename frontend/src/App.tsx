@@ -15,6 +15,10 @@ import Routines from './pages/admin/routines/Routines';
 import RoutineForm from './pages/admin/routines/RoutineForm';
 import Payments from './pages/admin/payments/Payments';
 import Profile from './pages/user/Profile';
+import DailyTracking from './pages/user/DailyTracking';
+import RoutineTemplate from './pages/user/RoutineTemplate';
+import UserStats from './pages/user/UserStats';
+import WeightTracking from './pages/user/WeightTracking';
 
 function App() {
   return (
@@ -25,8 +29,12 @@ function App() {
           
           <Route path="/" element={<ProtectedRoute />}>
             <Route element={<Layout />}>
-              <Route index element={<Navigate to="/profile" replace />} />
+              <Route index element={<Navigate to="/profile/seguimiento" replace />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/seguimiento" element={<DailyTracking />} />
+              <Route path="/profile/estadisticas" element={<UserStats />} />
+              <Route path="/profile/peso" element={<WeightTracking />} />
+              <Route path="/profile/rutina" element={<RoutineTemplate />} />
               
               <Route element={<AdminRoute />}>
                 <Route path="/admin/dashboard" element={<Dashboard />} />

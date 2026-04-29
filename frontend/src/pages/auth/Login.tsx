@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
 export const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -22,9 +24,9 @@ export const Login = () => {
         const userStr = localStorage.getItem('user');
         const user = userStr ? JSON.parse(userStr) : null;
         if (user?.role === 'admin') {
-          window.location.href = '/admin/dashboard';
+          navigate('/admin/dashboard', { replace: true });
         } else {
-          window.location.href = '/profile';
+          navigate('/profile', { replace: true });
         }
       } else {
         setError(result.message || 'Error al iniciar sesión');

@@ -77,6 +77,31 @@
   font-size: 1rem;
 }
 
+.profile-alert {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.95rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.profile-alert strong {
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.profile-alert p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.profile-alert.overdue {
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.45);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+}
+
 .profile-panels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -477,6 +502,38 @@
   font-size: 1.1rem;
 }
 
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.btn-header-action {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 0.42rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.btn-header-action:hover:not(:disabled) {
+  background: #15803d;
+}
+
+.btn-header-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-header-action-reset {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  color: #fecaca;
+}
+
 .modal-close {
   background: none;
   border: none;
@@ -540,6 +597,29 @@
   font-size: 0.9rem;
 }
 
+.btn-reset {
+  background: rgba(239, 68, 68, 0.18);
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.btn-reset:hover {
+  background: rgba(239, 68, 68, 0.28);
+}
+
+.btn-reset:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-save:hover {
   background: #1d4ed8;
 }
@@ -579,6 +659,45 @@
   gap: 0.4rem;
 }
 
+.log-inline-sets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.4rem;
+}
+
+.log-set-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  padding: 0.28rem 0.35rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  min-width: 0;
+}
+
+.log-inline-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.log-reps-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  min-width: 44px;
+  padding: 0 0.4rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
 .log-set-row {
   display: flex;
   align-items: center;
@@ -586,8 +705,8 @@
 }
 
 .log-set-label {
-  min-width: 40px;
-  font-size: 0.8rem;
+  min-width: 26px;
+  font-size: 0.74rem;
   color: rgba(255,255,255,0.5);
 }
 
@@ -602,9 +721,11 @@
 }
 
 .log-input.small {
-  width: auto;
-  flex: 1;
-  min-width: 60px;
+  width: 58px;
+  min-width: 58px;
+  flex: 0 0 58px;
+  padding: 0.35rem 0.4rem;
+  font-size: 0.82rem;
 }
 
 .log-input:focus {
@@ -667,6 +788,25 @@
     flex-direction: column;
   }
 
+  .modal-header {
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .modal-header h3 {
+    font-size: 0.96rem;
+  }
+
+  .modal-header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .btn-header-action {
+    font-size: 0.72rem;
+    padding: 0.36rem 0.58rem;
+  }
+
   .modal-footer button {
     width: 100%;
     justify-content: center;
@@ -674,5 +814,25 @@
 
   .log-set-row {
     flex-wrap: wrap;
+  }
+
+  .log-inline-sets {
+    grid-template-columns: 1fr;
+  }
+
+  .log-set-inline {
+    gap: 0.4rem;
+  }
+
+  .log-input.small {
+    width: 52px;
+    min-width: 52px;
+    flex-basis: 52px;
+  }
+
+  .log-reps-chip {
+    min-width: 40px;
+    height: 30px;
+    font-size: 0.74rem;
   }
 }
